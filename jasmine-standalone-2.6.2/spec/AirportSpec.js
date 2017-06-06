@@ -3,8 +3,12 @@
 describe('Airport', function(){
   var airport;
   var plane;
+  var weatherDouble;
   beforeEach(function(){
-    airport = new Airport();
+    weatherDouble = {
+      isClear: function() { return true; }
+    }
+    airport = new Airport(weatherDouble);
     plane = jasmine.createSpy('plane');
   });
 
@@ -18,8 +22,17 @@ describe('Airport', function(){
   });
 
   it('can clear planes for take-off', function(){
+
     airport.clearForTakeOff(plane);
     expect(airport.planes()).toEqual([]);
   });
 
+  it('says no land on bad weather', function() {
+    var badWeatherDouble = {
+      isClear: function() { return false; }
+    };
+    airport = new Airport(badWeatherDouble);
+    airport.clearForLanding(plane);
+    expect(airport.planes()).toEqual([]);
+  })
 });
